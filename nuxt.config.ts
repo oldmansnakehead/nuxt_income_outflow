@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     tsConfig: {
       include: [
         'types/**/*',
-        "composables/**/*"
+        'composables/**/*'
       ],
       compilerOptions: {
         module: 'esnext',
