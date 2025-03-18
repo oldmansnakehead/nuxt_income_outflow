@@ -4,7 +4,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   ssr: false,
-  devServer: { host: process.env.TAURI_DEV_HOST || 'localhost' },
+  devServer: { 
+    host: process.env.TAURI_DEV_HOST || 'localhost'
+  },
+
+  plugins: [
+  ],
 
   vite: {
     // Better support for Tauri CLI output
@@ -16,6 +21,18 @@ export default defineNuxtConfig({
     server: {
       // Tauri requires a consistent port
       strictPort: true,
+    },
+  },
+
+  typescript: {
+    tsConfig: {
+      include: [
+        'types/**/*',
+        "composables/**/*"
+      ],
+      compilerOptions: {
+        module: 'esnext',
+      },
     },
   },
 

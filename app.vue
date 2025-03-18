@@ -1,6 +1,10 @@
 <template>
   <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    test
   </div>
 </template>
+
+<script setup lang="ts">
+
+useTauriMenu();
+</script>

@@ -1,4 +1,14 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node", // ตั้งค่าให้ TypeScript ใช้การ resolve แบบ Node.js
+    "baseUrl": ".", // ตั้งค่า baseUrl เพื่อให้สามารถใช้ paths ได้
+    "paths": {
+      "@tauri-apps/api/*": ["node_modules/@tauri-apps/api/*"] // เพิ่ม paths เพื่อช่วย resolve โมดูล
+    }
+  },
 }
