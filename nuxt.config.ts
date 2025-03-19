@@ -1,7 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import Aura from '@primeuix/themes/aura'
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+
+  css: ["@/assets/css/tailwind.css", "@/assets/css/main.css", "primeicons/primeicons.css"],
 
   ssr: false,
   devServer: { 
@@ -41,6 +45,24 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     '@nuxt/image',
-    '@nuxt/test-utils'
-  ]
+    '@nuxt/test-utils',
+    "@primevue/nuxt-module"
+  ],
+
+  primevue: {
+    options: {
+      theme: {
+        preset: Aura
+      }
+    }
+},
+
+  postcss: {
+    plugins: {
+      "postcss-import": {},
+      '@tailwindcss/postcss': {},
+      // tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 })
