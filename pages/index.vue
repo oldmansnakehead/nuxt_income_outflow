@@ -1,13 +1,13 @@
 <template>
   <div>
-    <AppLogin />
+    5555555555555555555555555555555
   </div>
 </template>
 
 <script lang="ts" setup>
-definePageMeta({
-  layout: 'login'
-})
+const runtimeConfig = useRuntimeConfig()
+console.log(runtimeConfig.public.baseUrl, 'baseUrl NUXT 55556')
+console.log(runtimeConfig.hey, 'hey')
 </script>
 
 <style>

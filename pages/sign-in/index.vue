@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AuthAppLogin />
+    <AuthAppLogin/>
   </div>
 </template>
 
@@ -8,6 +8,8 @@
 definePageMeta({
   layout: 'login'
 })
+const runtimeConfig = useRuntimeConfig()
+console.log(runtimeConfig.public.baseUrl, 'Users')
 </script>
 
 <style>

@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import Aura from '@primeuix/themes/aura'
+console.log(process.env.API_BASE_URL, 'API_BASE_URL')
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -9,7 +10,7 @@ export default defineNuxtConfig({
 
   ssr: false,
   devServer: { 
-    host: process.env.TAURI_DEV_HOST || 'localhost'
+    host: process.env.NUXT_PUBLIC_TAURI_DEV_HOST || 'localhost'
   },
 
   plugins: [
@@ -55,7 +56,9 @@ export default defineNuxtConfig({
         preset: Aura
       }
     }
-},
+  },
+
+  
 
   postcss: {
     plugins: {
@@ -64,5 +67,11 @@ export default defineNuxtConfig({
       // tailwindcss: {},
       autoprefixer: {},
     },
+  },
+
+  runtimeConfig: {
+    public: {
+      baseUrl: '',
+    }
   },
 })
