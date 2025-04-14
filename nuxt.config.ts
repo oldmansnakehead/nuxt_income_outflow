@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import Aura from '@primeuix/themes/aura'
-console.log(process.env.API_BASE_URL, 'API_BASE_URL')
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -47,7 +46,8 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@nuxt/test-utils',
-    "@primevue/nuxt-module"
+    "@primevue/nuxt-module",
+    '@sidebase/nuxt-auth',
   ],
 
   primevue: {
@@ -57,9 +57,6 @@ export default defineNuxtConfig({
       }
     }
   },
-
-  
-
   postcss: {
     plugins: {
       "postcss-import": {},
@@ -69,9 +66,81 @@ export default defineNuxtConfig({
     },
   },
 
+  nitro: {
+    routeRules: {
+      '/api/**': {
+        proxy: {
+          to: `${process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:8080'}/**`,
+        },
+      },
+    },
+  },
+
   runtimeConfig: {
     public: {
       baseUrl: '',
+      origin: ''
     }
   },
+
+  auth: {
+    // กำหนด origin (Frontend URL) หากจำเป็น
+    origin: process.env.NUXT_PUBLIC_ORIGIN, // เปลี่ยนเป็น URL Frontend ของคุณ
+    originEnvKey: 'NUXT_PUBLIC_ORIGIN',
+    baseURL: process.env.NUXT_PUBLIC_BASE_URL,
+
+    provider: {
+      type: 'local',
+      
+      // กำหนด endpoints ให้ตรงกับ backend
+      endpoints: {
+        signIn: { 
+          path: '/users/login', 
+          method: 'post' 
+        },
+        signOut: { 
+          path: '/users/logout', 
+          method: 'post' 
+        },
+        getSession: { 
+          path: '/users/profile', 
+          method: 'get' 
+        }
+      },
+
+      // ตั้งค่า Token จาก response
+      token: {
+        signInResponseTokenPointer: '/access_token', // ดึงจาก "access_token" ใน response
+        type: 'Bearer',
+        headerName: 'Authorization', // ชื่อ header ที่ส่ง token
+        maxAgeInSeconds: 3600, // 60 วิ
+        cookieName: 'auth.token',
+      },
+
+      // ตั้งค่า Refresh Token
+      refresh: {
+        isEnabled: true, // เปิดใช้งาน refresh
+        endpoint: {
+          path: '/users/refresh_token', 
+          method: 'post' 
+        },
+        refreshOnlyToken: false, // false = ถ้ามีการยิง refresh token จะเปลี่ยนทั้ง access token และ refresh token
+        token: {
+          maxAgeInSeconds: 60 * 60 * 24 * 30, // 30 วัน
+          signInResponseRefreshTokenPointer: '/refresh_token', // ดึงจาก "refresh_token" ใน response
+          refreshResponseTokenPointer: '/access_token', // ดึง token ใหม่จาก "access_token"
+          refreshResponseRefreshTokenPointer: '/refresh_token',
+          cookieName: 'auth.refresh-token', // ชื่อ cookie สำหรับ refresh token
+          // cookieName: 'RefreshToken',
+          refreshRequestTokenPointer: '/refresh_token', // ตอนยิง refresh token จะให้ยิง request body ชื่ออะไร
+          headerName: 'RefreshToken',
+        }
+      },
+
+      // กำหนดหน้า login
+      pages: {
+        login: '/sign-in' // หน้า login ของคุณ
+      }
+    }
+  }
 })

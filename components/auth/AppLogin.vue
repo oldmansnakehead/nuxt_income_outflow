@@ -11,8 +11,17 @@
       <!-- Sign In Form -->
       <form class="space-y-4" @submit.prevent="login">
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-          <InputText id="username" v-model="username" class="w-full" placeholder="Enter your username" />
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <!-- <InputText id="email" v-model="email" class="w-full" placeholder="Enter your email" /> -->
+          <InputText
+            id="email"
+            v-model="email"
+            type="email" 
+            class="w-full"
+            placeholder="Enter your email"
+            @blur="validateEmail"
+          />
+          <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
         </div>
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
@@ -38,14 +47,48 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-
-const username = ref('')
+<script setup lang="ts">
+const email = ref('')
 const password = ref('')
+const errorMessage = ref('')
 
-const login = () => {
-  console.log('Logging in with:', username.value, password.value)
+// ตรวจสอบความถูกต้องของ Email
+const validateEmail = () => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email.value)) {
+    errorMessage.value = 'Please enter a valid email address'
+    return false
+  }
+  errorMessage.value = ''
+  return true
+}
+
+// ฟังก์ชัน Login
+const login = async () => {
+  // ตรวจสอบ Email ก่อนส่ง request
+  if (!validateEmail()) return
+
+  try {
+    const { signIn } = useAuth()
+
+    await signIn({
+      email: email.value,
+      password: password.value,
+    })
+
+    // หากล็อกอินสำเร็จ ให้ redirect
+    navigateTo('/user')
+
+  } catch (error) {
+    console.log(error, 1212312121);
+    // จัดการ error จาก backend
+    /* if (error.response?.data?.message) {
+      errorMessage.value = error.response.data.message
+    } else {
+      errorMessage.value = 'Login failed. Please try again.'
+    } */
+   console.log(error);
+  }
 }
 </script>
 
